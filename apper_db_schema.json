@@ -1,1 +1,394 @@
-[]
+[
+  {
+    "name": "users",
+    "label": "User",
+    "plural": "Users",
+    "fields": [
+      {
+        "name": "id",
+        "type": "Text"
+      },
+      {
+        "name": "email",
+        "type": "Email"
+      },
+      {
+        "name": "password",
+        "type": "Text"
+      },
+      {
+        "name": "first_name",
+        "type": "Text"
+      },
+      {
+        "name": "last_name",
+        "type": "Text"
+      },
+      {
+        "name": "phone",
+        "type": "Phone"
+      },
+      {
+        "name": "role",
+        "type": "Picklist",
+        "values": "admin,customer,manager,guest"
+      },
+      {
+        "name": "status",
+        "type": "Picklist",
+        "values": "active,inactive,blocked,pending"
+      },
+      {
+        "name": "profile_image",
+        "type": "Files"
+      },
+      {
+        "name": "created_at",
+        "type": "DateTime"
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTime"
+      },
+      {
+        "name": "last_login",
+        "type": "DateTime"
+      }
+    ]
+  },
+  {
+    "name": "categories",
+    "label": "Category",
+    "plural": "Categories",
+    "fields": [
+      {
+        "name": "id",
+        "type": "Text"
+      },
+      {
+        "name": "name",
+        "type": "Text"
+      },
+      {
+        "name": "description",
+        "type": "MultilineText"
+      },
+      {
+        "name": "parent_category",
+        "type": "Lookup",
+        "toTable": "categories"
+      },
+      {
+        "name": "image",
+        "type": "Files"
+      },
+      {
+        "name": "is_active",
+        "type": "Boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "DateTime"
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTime"
+      }
+    ]
+  },
+  {
+    "name": "products",
+    "label": "Product",
+    "plural": "Products",
+    "fields": [
+      {
+        "name": "id",
+        "type": "Text"
+      },
+      {
+        "name": "name",
+        "type": "Text"
+      },
+      {
+        "name": "description",
+        "type": "MultilineText"
+      },
+      {
+        "name": "price",
+        "type": "Currency"
+      },
+      {
+        "name": "sale_price",
+        "type": "Currency"
+      },
+      {
+        "name": "sku",
+        "type": "Text"
+      },
+      {
+        "name": "inventory_count",
+        "type": "Number"
+      },
+      {
+        "name": "category",
+        "type": "MasterDetail",
+        "toTable": "categories"
+      },
+      {
+        "name": "tags",
+        "type": "Multipicklist",
+        "values": "new,sale,featured,limited,seasonal,clearance"
+      },
+      {
+        "name": "images",
+        "type": "Files"
+      },
+      {
+        "name": "rating",
+        "type": "Rating"
+      },
+      {
+        "name": "is_active",
+        "type": "Boolean"
+      },
+      {
+        "name": "is_featured",
+        "type": "Boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "DateTime"
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTime"
+      }
+    ]
+  },
+  {
+    "name": "reviews",
+    "label": "Review",
+    "plural": "Reviews",
+    "fields": [
+      {
+        "name": "id",
+        "type": "Text"
+      },
+      {
+        "name": "product",
+        "type": "MasterDetail",
+        "toTable": "products"
+      },
+      {
+        "name": "user",
+        "type": "Lookup",
+        "toTable": "users"
+      },
+      {
+        "name": "rating",
+        "type": "Rating"
+      },
+      {
+        "name": "title",
+        "type": "Text"
+      },
+      {
+        "name": "comment",
+        "type": "MultilineText"
+      },
+      {
+        "name": "status",
+        "type": "Picklist",
+        "values": "pending,approved,rejected"
+      },
+      {
+        "name": "images",
+        "type": "Files"
+      },
+      {
+        "name": "created_at",
+        "type": "DateTime"
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTime"
+      }
+    ]
+  },
+  {
+    "name": "orders",
+    "label": "Order",
+    "plural": "Orders",
+    "fields": [
+      {
+        "name": "id",
+        "type": "Text"
+      },
+      {
+        "name": "user",
+        "type": "Lookup",
+        "toTable": "users"
+      },
+      {
+        "name": "status",
+        "type": "Picklist",
+        "values": "pending,processing,shipped,delivered,cancelled,refunded"
+      },
+      {
+        "name": "total_amount",
+        "type": "Currency"
+      },
+      {
+        "name": "tax_amount",
+        "type": "Currency"
+      },
+      {
+        "name": "shipping_amount",
+        "type": "Currency"
+      },
+      {
+        "name": "discount_amount",
+        "type": "Currency"
+      },
+      {
+        "name": "shipping_address",
+        "type": "MultilineText"
+      },
+      {
+        "name": "billing_address",
+        "type": "MultilineText"
+      },
+      {
+        "name": "payment_method",
+        "type": "Picklist",
+        "values": "credit_card,paypal,bank_transfer,cash_on_delivery"
+      },
+      {
+        "name": "payment_status",
+        "type": "Picklist",
+        "values": "pending,paid,failed,refunded"
+      },
+      {
+        "name": "created_at",
+        "type": "DateTime"
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTime"
+      }
+    ]
+  },
+  {
+    "name": "order_items",
+    "label": "Order Item",
+    "plural": "Order Items",
+    "fields": [
+      {
+        "name": "id",
+        "type": "Text"
+      },
+      {
+        "name": "order",
+        "type": "MasterDetail",
+        "toTable": "orders"
+      },
+      {
+        "name": "product",
+        "type": "Lookup",
+        "toTable": "products"
+      },
+      {
+        "name": "quantity",
+        "type": "Number"
+      },
+      {
+        "name": "price",
+        "type": "Currency"
+      },
+      {
+        "name": "discount",
+        "type": "Currency"
+      },
+      {
+        "name": "total",
+        "type": "Currency"
+      },
+      {
+        "name": "created_at",
+        "type": "DateTime"
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTime"
+      }
+    ]
+  },
+  {
+    "name": "cart_items",
+    "label": "Cart Item",
+    "plural": "Cart Items",
+    "fields": [
+      {
+        "name": "id",
+        "type": "Text"
+      },
+      {
+        "name": "user",
+        "type": "MasterDetail",
+        "toTable": "users"
+      },
+      {
+        "name": "product",
+        "type": "Lookup",
+        "toTable": "products"
+      },
+      {
+        "name": "quantity",
+        "type": "Number"
+      },
+      {
+        "name": "created_at",
+        "type": "DateTime"
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTime"
+      }
+    ]
+  },
+  {
+    "name": "settings",
+    "label": "Setting",
+    "plural": "Settings",
+    "fields": [
+      {
+        "name": "id",
+        "type": "Text"
+      },
+      {
+        "name": "key",
+        "type": "Text"
+      },
+      {
+        "name": "value",
+        "type": "Text"
+      },
+      {
+        "name": "description",
+        "type": "MultilineText"
+      },
+      {
+        "name": "is_public",
+        "type": "Boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "DateTime"
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTime"
+      }
+    ]
+  }
+]
