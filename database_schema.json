@@ -1,0 +1,291 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "description": "Stores user account information",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "constraints": ["PRIMARY KEY", "DEFAULT uuid_generate_v4()"]
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(255)",
+          "constraints": ["UNIQUE", "NOT NULL"]
+        },
+        {
+          "name": "password_hash",
+          "type": "VARCHAR(255)",
+          "constraints": ["NOT NULL"]
+        },
+        {
+          "name": "full_name",
+          "type": "VARCHAR(100)",
+          "constraints": ["NOT NULL"]
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": ["NOT NULL", "DEFAULT NOW()"]
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": ["NOT NULL", "DEFAULT NOW()"]
+        },
+        {
+          "name": "last_login",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": []
+        }
+      ],
+      "indexes": [
+        {
+          "columns": ["email"],
+          "type": "BTREE"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "description": "Stores task information",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "constraints": ["PRIMARY KEY", "DEFAULT uuid_generate_v4()"]
+        },
+        {
+          "name": "user_id",
+          "type": "UUID",
+          "constraints": ["NOT NULL", "REFERENCES users(id) ON DELETE CASCADE"]
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(255)",
+          "constraints": ["NOT NULL"]
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "constraints": []
+        },
+        {
+          "name": "due_date",
+          "type": "DATE",
+          "constraints": []
+        },
+        {
+          "name": "priority",
+          "type": "VARCHAR(20)",
+          "constraints": ["NOT NULL", "DEFAULT 'medium'", "CHECK (priority IN ('low', 'medium', 'high'))"]
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "constraints": ["NOT NULL", "DEFAULT 'pending'", "CHECK (status IN ('pending', 'in_progress', 'completed'))"]
+        },
+        {
+          "name": "category_id",
+          "type": "UUID",
+          "constraints": ["REFERENCES categories(id) ON DELETE SET NULL"]
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": ["NOT NULL", "DEFAULT NOW()"]
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": ["NOT NULL", "DEFAULT NOW()"]
+        },
+        {
+          "name": "completed_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": []
+        }
+      ],
+      "indexes": [
+        {
+          "columns": ["user_id"],
+          "type": "BTREE"
+        },
+        {
+          "columns": ["status"],
+          "type": "BTREE"
+        },
+        {
+          "columns": ["due_date"],
+          "type": "BTREE"
+        },
+        {
+          "columns": ["priority"],
+          "type": "BTREE"
+        }
+      ]
+    },
+    {
+      "name": "categories",
+      "description": "Stores task categories for organization",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "constraints": ["PRIMARY KEY", "DEFAULT uuid_generate_v4()"]
+        },
+        {
+          "name": "user_id",
+          "type": "UUID",
+          "constraints": ["NOT NULL", "REFERENCES users(id) ON DELETE CASCADE"]
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(100)",
+          "constraints": ["NOT NULL"]
+        },
+        {
+          "name": "color",
+          "type": "VARCHAR(20)",
+          "constraints": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": ["NOT NULL", "DEFAULT NOW()"]
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": ["NOT NULL", "DEFAULT NOW()"]
+        }
+      ],
+      "indexes": [
+        {
+          "columns": ["user_id"],
+          "type": "BTREE"
+        }
+      ]
+    },
+    {
+      "name": "tags",
+      "description": "Stores tag information for tasks",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "constraints": ["PRIMARY KEY", "DEFAULT uuid_generate_v4()"]
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(50)",
+          "constraints": ["NOT NULL"]
+        },
+        {
+          "name": "user_id",
+          "type": "UUID",
+          "constraints": ["NOT NULL", "REFERENCES users(id) ON DELETE CASCADE"]
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": ["NOT NULL", "DEFAULT NOW()"]
+        }
+      ],
+      "indexes": [
+        {
+          "columns": ["user_id", "name"],
+          "type": "BTREE",
+          "unique": true
+        }
+      ]
+    },
+    {
+      "name": "task_tags",
+      "description": "Junction table connecting tasks and tags",
+      "columns": [
+        {
+          "name": "task_id",
+          "type": "UUID",
+          "constraints": ["NOT NULL", "REFERENCES tasks(id) ON DELETE CASCADE"]
+        },
+        {
+          "name": "tag_id",
+          "type": "UUID", 
+          "constraints": ["NOT NULL", "REFERENCES tags(id) ON DELETE CASCADE"]
+        }
+      ],
+      "primaryKey": ["task_id", "tag_id"],
+      "indexes": [
+        {
+          "columns": ["tag_id"],
+          "type": "BTREE"
+        }
+      ]
+    },
+    {
+      "name": "task_comments",
+      "description": "Stores comments on tasks",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "constraints": ["PRIMARY KEY", "DEFAULT uuid_generate_v4()"]
+        },
+        {
+          "name": "task_id",
+          "type": "UUID",
+          "constraints": ["NOT NULL", "REFERENCES tasks(id) ON DELETE CASCADE"]
+        },
+        {
+          "name": "user_id",
+          "type": "UUID",
+          "constraints": ["NOT NULL", "REFERENCES users(id) ON DELETE CASCADE"]
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"]
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": ["NOT NULL", "DEFAULT NOW()"]
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "constraints": ["NOT NULL", "DEFAULT NOW()"]
+        }
+      ],
+      "indexes": [
+        {
+          "columns": ["task_id"],
+          "type": "BTREE"
+        },
+        {
+          "columns": ["user_id"],
+          "type": "BTREE"
+        }
+      ]
+    }
+  ],
+  "setup": [
+    "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";",
+    
+    "CREATE OR REPLACE FUNCTION update_updated_at_column() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at = NOW(); RETURN NEW; END; $$ LANGUAGE plpgsql;",
+    
+    "CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();",
+    
+    "CREATE TRIGGER update_tasks_updated_at BEFORE UPDATE ON tasks FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();",
+    
+    "CREATE TRIGGER update_categories_updated_at BEFORE UPDATE ON categories FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();",
+    
+    "CREATE TRIGGER update_task_comments_updated_at BEFORE UPDATE ON task_comments FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();"
+  ],
+  "indexes": [
+    "CREATE INDEX tasks_completed_at_idx ON tasks (completed_at) WHERE completed_at IS NOT NULL;",
+    "CREATE INDEX tasks_user_due_date_idx ON tasks (user_id, due_date) WHERE due_date IS NOT NULL;"
+  ]
+}
